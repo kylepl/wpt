@@ -10,6 +10,8 @@
   <link rel="match" href="position-sticky-large-top-2-ref.html">
   <meta name="assert" content="This test verifies the position of a position:sticky element with large top value can be reached by scrolling the overflow container.">
 
+  <script src="resources/ref-rectangle.js"></script>
+
   <style>
   .scroll {
     border: 5px solid blue;
@@ -36,6 +38,7 @@
   <script>
   function runTest() {
     document.getElementById("scroll2").scrollTop = 50;
+    createIndicatorForStickyElements(document.querySelectorAll('.sticky'));
   }
   </script>
 
