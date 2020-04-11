@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Declarative Shadow DOM</title>
+<link rel="author" title="Mason Freed" href="mailto:masonfreed@chromium.org">
+<link rel="help" href="https://github.com/whatwg/dom/issues/831">
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+
+<body>
+<script>
+    let templatesSeen = 0;
+    function myObserver(mutationsList, observer) {
+      for(let mutation of mutationsList) {
+        for(let n of mutation.addedNodes) {
+          if (n.localName === "template") {
+            templatesSeen++;
+            const shadowroot = n.getAttribute("shadowroot");
+            assert_true(shadowroot === "open" || shadowroot === "closed",'Declarative template should have shadowroot attribute');
+            assert_equals(n.content,null,"Declarative template content should be null");
+          }
+        }
+      }
+    }
+    const observer = new MutationObserver(myObserver);
+    observer.observe(document.body, { childList: true, subtree: true });
+    assert_equals(templatesSeen, 0, 'No mutations yet');
+</script>
+
+<div id=openhost>
+  <template shadowroot=open>
+    <slot></slot>
+  </template>
+</div>
+
+<div id=closedhost>
+  <template shadowroot=closed>
+    <slot></slot>
+  </template>
+</div>
+
+<script>
+  test(t => {
+    t.add_cleanup(function() { observer.disconnect(); });
+
+    assert_equals(templatesSeen, 2);
+
+    // Open shadow root
+    let host = document.querySelector('#openhost');
+    assert_equals(host.querySelector('template'), null, "No leftover template node");
+    assert_true(!!host.shadowRoot,"Shadow root should exist");
+
+    // Closed shadow root
+    host = document.querySelector('#closedhost');
+    assert_equals(host.querySelector('template'), null, "No leftover template node");
+    assert_true(!host.shadowRoot,"Closed shadow root");
+  },'Declarative Shadow DOM: template .content() should be null');
+</script>
+</body>
