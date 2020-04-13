@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<link rel="help" href="https://drafts.csswg.org/css-grid-1/#valdef-display-grid">
+<link rel="match" href="reference/whitespace-in-grid-item-001-ref.html">
+<meta name="assert" content="Renderer for white space should not be created"/>
+<link href="support/grid.css" rel="stylesheet">
+<style>
+  .grid {
+    white-space: pre;
+  }
+  .a {
+    height: 100%;
+    width: 30px;
+    background: salmon;
+  }
+</style>
+<body>
+  <div class="grid">
+
+    <div class="a"></div> &#9;
+  </div>
+</body>
+</html>
